@@ -1,3 +1,9 @@
+# UMLBox compiled files
+umlbox-mudem
+umlbox-linux
+init
+umlbox-initrd.gz
+
 # Object files
 *.o
 *.ko
