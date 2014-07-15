@@ -55,6 +55,7 @@ void handleTTYRaw(char **saveptr);
 void handleEnv(char **saveptr);
 void crash();
 
+int retval = 0;
 unsigned int timeout = 0;
 int childI = 0, childO = 1, childE = 2;
 uid_t childUID = 0;
@@ -168,7 +169,7 @@ int main(int argc, char **argv)
     sync();
     reboot(LINUX_REBOOT_CMD_POWER_OFF);
 
-    return 0;
+    return retval;
 }
 
 void mkdirP(char *dir)
@@ -333,6 +334,7 @@ void handleRun(int daemon, char **saveptr)
             if (wait(NULL) == spid) {
                 /* kill it */
                 kill(pid, SIGKILL);
+                retval = 1;
                 waitpid(pid, NULL, 0);
             }
 
