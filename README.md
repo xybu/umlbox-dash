@@ -3,7 +3,7 @@ umlbox-dash
 
 Gregor Richards' UMLBox (https://bitbucket.org/GregorR/umlbox) with enhanced features and Git version control.
 
-This repository is Based on hg commit [73e7326](https://bitbucket.org/GregorR/umlbox/commits/73e732639635228f3eef6ddd8738d6947ed9837d).
+This repository is Based on hg commit `73e7326`.
 
 Introduction
 ============
@@ -39,13 +39,22 @@ Benefits of Plash over UMLBox:
 Installation
 ============
 
-Use `make` or `make all` to build umlbox and an included kernel. Use `make nokernel` to build only the non-kernel components, to use another UML kernel.  In either case, `make install` installs umlbox (ignore error output if you're not installing the kernel), and you may use `make install PREFIX=<some prefix>` to install to a custom prefix.
+`umlbox` requires `user-mode-linux` package (in Ubuntu) to compile and run correctly.
+
+To compile the binary,
+
+* Use `make` or `make all` to build umlbox and an included kernel. 
+* Use `make nokernel` to build only the non-kernel components, to use another UML kernel. 
+
+To install the sandbox to the system,
+
+* Run `sudo make install` installs umlbox (ignore error output if you're not installing the kernel)
+* Use `make install PREFIX=<some prefix>` to install to a custom prefix.
 
 Usage
 =====
 
-UMLBox requires no special privileges, and sandboxes all accesses, including filesystem and networking. It presents a user-selectable limited subset of the directory structure to the guest process, and prevents networking and IPC to host processes.
-
+`umlbox` requires no special hardware requirement (run on both x86 and x64) or system privileges, and sandboxes all accesses, including filesystem and networking. It presents a user-selectable limited subset of the directory structure to the guest process, and prevents networking and IPC to host processes.
 
 ```
 umlbox [options] <command>
@@ -71,12 +80,19 @@ Options:
         --debug: Keep UML and UMLBox's init's debug output intact.
 ```
 
-`-f` will bind a host directory so that the guest can see it. e.g. umlbox -f /usr makes /usr accessible from within the guest, but not writable. -fw is equivalent to -f, but also makes the shared directory writable.
+Useful arguments: 
 
-`-t` and -tw are similar to -f and -fw, but allow the path seen in the guest to be different from the host path. e.g. umlbox -t /hostusr /usr shares the host's /usr as /hostusr within the guest.
+ * `-f` will bind a host directory so that the guest can see it. E.g. `umlbox -f /usr` makes `/usr` accessible from within the guest, but not writable. -fw is equivalent to -f, but also makes the shared directory writable.
+ * `-t` and `-tw` are similar to `-f` and `-fw`, but allow the path seen in the guest to be different from the host path. E.g. `umlbox -t /hostusr /usr` shares the host's /usr as /hostusr within the guest.
+ * `-B` is equivalent to `-f /usr -f /bin -f /lib -f /lib32 -f /lib64 -f /etc/alternatives -f /dev`
+ * `-X` is very limited as yet. It can only forward DISPLAY=:0.0, it forwards it to DISPLAY=127.0.0.1:0.0, and it doesn't set any of the required environment variables (of which at least DISPLAY and XAUTHORITY are necessities). It will be fixed in time :)
+ * `-L` and -R work similarly to their ssh counterparts.
 
-`-B` is equivalent to -f /usr -f /bin -f /lib -f /lib32 -f /lib64 -f /etc/alternatives -f /dev
-
-`-X` is very limited as yet. It can only forward DISPLAY=:0.0, it forwards it to DISPLAY=127.0.0.1:0.0, and it doesn't set any of the required environment variables (of which at least DISPLAY and XAUTHORITY are necessities). It will be fixed in time :)
-
-`-L` and -R work similarly to their ssh counterparts.
+Notes:
+ 
+ * When using `-m` to limit the memory for the UML environment, the value should be larger than the minimum memory required for the Linux kernel.
+	 * When there is not enough memory to instantiate User-mode linux, `umlbox` crashes.
+ * Take the startup time of the sandbox into considerations when setting time limit. Empirically it takes less than 1 second.
+	 * Beware that system utils like `gcc`, when run inside umlbox, is substiantially slow.
+ * To set more limits, combine with system utils like `nice` and `ulimit`.
+ 	 * See `example` directory for more details.

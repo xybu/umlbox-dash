@@ -1,1 +1,0 @@
-/usr/bin/umlbox -B -fw . -m 48m -T 60 ./limits /usr/bin/nice -n10 echo 123
