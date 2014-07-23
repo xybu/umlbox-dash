@@ -41,6 +41,8 @@ Installation
 
 `umlbox` requires `user-mode-linux` package (in Ubuntu) to compile and run correctly.
 
+The simplest way to install is to run `./setup.sh`.
+
 To compile the binary,
 
 * Use `make` or `make all` to build umlbox and an included kernel. 
