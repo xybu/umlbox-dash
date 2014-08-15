@@ -83,7 +83,6 @@ int main(int argc, char **argv)
     mknod("/console", 0644 | S_IFCHR, makedev(5, 1));
     i = open("/console", O_RDONLY);
     o = open("/console", O_WRONLY);
-    
     if (i != 0) dup2(i, 0);
     if (o != 1) dup2(o, 1);
     if (o != 2) dup2(o, 2);
@@ -168,7 +167,7 @@ int main(int argc, char **argv)
 
     sync();
     reboot(LINUX_REBOOT_CMD_POWER_OFF);
-    
+
     return 0;
 }
 
@@ -333,7 +332,6 @@ void handleRun(int daemon, char **saveptr)
 
             if (wait(NULL) == spid) {
                 /* kill it */
-                fprintf(stderr, "Sending timeout signal to internal process.\n");
                 kill(pid, SIGKILL);
                 waitpid(pid, NULL, 0);
             }
